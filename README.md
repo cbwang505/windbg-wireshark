@@ -29,13 +29,29 @@ pipe.exe pipeout pipein
 
 Wireshark在pipe.exe目录下打开生成的pcap文件
 
+原作者工具使用方法
+
+"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\windbg.exe" -k "net:port=51111,key=8.8.8.8"
+
+在虚拟机中执行
+
+bcdedit /dbgsettings net hostip:192.168.2.1 port:51111 key:8.8.8.8
+
+bcdedit /debug on
+n
+最后执行
+"C:\Program Files\Wireshark\Wireshark.exe" -Xlua_script:kdnet.lua -okdnet.key:8.8.8.8 
+    -r pcaps/windbg-uncut.pcapng.gz
+
 ## 运行效果 ##
 
 以下是笔者工具运行的效果,如图:
 
 ![查看大图](img/pipe.gif)
 
+##  相关引用 ##
 
+[原作者工具](https://github.com/Lekensteyn/kdnet/tree/master)
 
 ## 参与贡献 ##
 
