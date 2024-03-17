@@ -38,8 +38,9 @@ Wireshark在pipe.exe目录下打开生成的pcap文件
 bcdedit /dbgsettings net hostip:192.168.2.1 port:51111 key:8.8.8.8
 
 bcdedit /debug on
-n
+
 最后执行
+
 "C:\Program Files\Wireshark\Wireshark.exe" -Xlua_script:kdnet.lua -okdnet.key:8.8.8.8 
     -r pcaps/windbg-uncut.pcapng.gz
 
