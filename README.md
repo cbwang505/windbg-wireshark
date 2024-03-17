@@ -41,8 +41,15 @@ bcdedit /debug on
 
 最后执行
 
-"C:\Program Files\Wireshark\Wireshark.exe" -Xlua_script:kdnet.lua -okdnet.key:8.8.8.8 
-    -r pcaps/windbg-uncut.pcapng.gz
+"C:\Program Files\Wireshark\Wireshark.exe" -Xlua_script:kdnet.lua -okdnet.key:8.8.8.8  -r pcaps/windbg-uncut.pcap
+
+新增Wireshark实时捕获模式使用方法
+
+pipe.exe pipeout pipein bacnet
+
+"C:\Program Files\Wireshark\Wireshark.exe"  -ni \\.\pipe\bacnet
+
+在Wireshark打开pipe\bacnet查看实时捕获数据包
 
 ## 运行效果 ##
 

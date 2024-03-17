@@ -29,7 +29,7 @@ namespace pipe
         }
 
 
-        public bool WritePactet(byte[] buffer, bool fromhost)
+        public byte[] WritePactet(byte[] buffer, bool fromhost)
         {
             EthernetPacket eth = null;
             IPv4Packet ip = null;
@@ -61,7 +61,7 @@ namespace pipe
             udp.UpdateUdpChecksum();
             ip.UpdateIPChecksum();
             outdev.Write(new ReadOnlySpan<byte>(eth.Bytes));
-            return true;
+            return eth.Bytes;
         }
     }
 }

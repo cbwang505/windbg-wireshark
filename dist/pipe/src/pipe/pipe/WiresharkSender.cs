@@ -152,17 +152,24 @@ namespace Wireshark
         //public WiresharkSender(string pipe_name, string pipeServer_pipe, string pipeClient_pipe,UInt32 pcap_netid)
         public WiresharkSender( string pipeServer_pipe, string pipeClient_pipe)
         {
-           // this.pipe_name = pipe_name;
-            //this.pcap_netid = pcap_netid;
+           
             pipeServer_pipe_name = pipeServer_pipe;
             pipeClient_pipe_name = pipeClient_pipe;
-            // Open the pipe and wait to Wireshark on a background thread
-            /*Thread th = new Thread(PipeCreate);
-            th.IsBackground = true;
-            th.Start();*/
+           
             Thread th2 = new Thread(PipeCreateWindbg);
             th2.IsBackground = true;
             th2.Start();
+        }
+
+        public void WiresharCreate(string pipe_name, UInt32 pcap_netid)
+        {
+            this.pipe_name = pipe_name;
+            this.pcap_netid = pcap_netid;
+
+            // Open the pipe and wait to Wireshark on a background thread
+            Thread th = new Thread(PipeCreate);
+            th.IsBackground = true;
+            th.Start();
         }
 
         private void PipeCreate()
@@ -173,7 +180,7 @@ namespace Wireshark
                 WiresharkPipe = new NamedPipeServerStream(pipe_name, PipeDirection.Out, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
                 // Wait
                 WiresharkPipe.WaitForConnection();
-                Console.WriteLine("WiresharkPipe IsConnected");
+                Console.WriteLine("WiresharkPipe IsConnected,,Wireshark session established");
                 // Wireshark Global Header
                 pcap_hdr_g p = new pcap_hdr_g(65535, pcap_netid);
                 byte[] bh = p.ToByteArray();
@@ -376,8 +383,12 @@ namespace Wireshark
             int splitbufscount = splitbuf.Count;
             foreach (byte[] tmpbuf in splitbuf.Where(h => h.Length > 1))
             {
-                //SendToWireshark(tmpbuf, 0, tmpbuf.Length, DateTime.Now);
-                PacketWriter.Current.WritePactet(tmpbuf,fromhost);
+                //
+                byte[] bts= PacketWriter.Current.WritePactet(tmpbuf,fromhost);
+                if (IsConnected)
+                {
+                    SendToWireshark(bts, 0, bts.Length, DateTime.Now);
+                }
                 writecount++;
             }
 
